@@ -40,5 +40,15 @@ public class HolidaysController : Controller
         var result = await _holidayService.GetSpecificDayStatus(request);
         return Ok(result);
     }
+    [HttpGet("freeDays")]
+    public async Task<IActionResult> GetMaximumFreeDays([FromQuery]string countryCode, [FromQuery]int year){
+        var request = new GetMaximumNumberOfFreeDaysRequest
+        {
+            CountryCode = countryCode,
+            Year = year
+        };
+        var result = await _holidayService.GetMaximumNumberOfFreeDays(request);
+        return Ok(result);
+    }
   
 }
