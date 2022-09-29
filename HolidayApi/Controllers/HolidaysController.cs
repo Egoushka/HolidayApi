@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using HolidayApi.Data;
+using HolidayApi.Data.Requests;
 using HolidayApi.Interfaces;
 using HolidayApi.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -25,9 +26,21 @@ public class HolidaysController : Controller
         }
         return Ok(result);
     }
-    [HttpGet]
-    public IActionResult GetHolidaysGroupedByMonthForGivenCountry(){
-        return Ok("Hello World");
+    [HttpGet("holidays/{countryCode}/{year}")]
+    public async Task<IActionResult> GetHolidaysByYearAndCountry(string countryCode, int year){
+        var request = new GetHolidaysByYearAndCountryRequest
+        {
+            CountryCode = countryCode,
+            Year = year
+        };
+        
+        var result = await _holidayService.GetHolidaysByYearAndCountry(request);
+        
+        if(result == null)
+        {
+            return BadRequest();
+        }
+        return Ok(result);
     }
     [HttpGet]
     public IActionResult GetSpecificDayStatus(){
