@@ -1,13 +1,9 @@
-﻿using System.Text.Json;
-using HolidayApi.Data;
-using HolidayApi.Data.Requests;
+﻿using HolidayApi.Data.Requests;
 using HolidayApi.Interfaces;
-using HolidayApi.Services;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 
 namespace HolidayApi.Controllers;
-[Route("api/[controller]")]
+[Route("api/holiday")]
 public class HolidaysController : Controller
 {
     private readonly IHolidayService _holidayService;
@@ -20,10 +16,6 @@ public class HolidaysController : Controller
     {
         var result = await _holidayService.GetCountries();
         
-        if(result == null)
-        {
-            return BadRequest();
-        }
         return Ok(result);
     }
     [HttpGet("holidays")]
@@ -36,13 +28,9 @@ public class HolidaysController : Controller
         
         var result = await _holidayService.GetHolidaysByYearAndCountry(request);
         
-        if(result == null)
-        {
-            return BadRequest();
-        }
         return Ok(result);
     }
-    [HttpGet("getSpecificDay")]
+    [HttpGet("specificDayStatus")]
     public async Task<IActionResult> GetSpecificDayStatus([FromQuery]string countryCode, [FromQuery]string date){
         var request = new GetSpecificDayStatusRequest
         {

@@ -5,7 +5,6 @@ using HolidayApi.Data.DTO.Holiday;
 using HolidayApi.Data.Requests;
 using HolidayApi.Interfaces;
 using Newtonsoft.Json.Linq;
-using System.Linq;
 using HolidayApi.Data.DTO.Day;
 using HolidayApi.Data.Response;
 

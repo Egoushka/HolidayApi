@@ -1,5 +1,4 @@
-﻿using HolidayApi.Data.Enum;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 namespace HolidayApi.Data;
 

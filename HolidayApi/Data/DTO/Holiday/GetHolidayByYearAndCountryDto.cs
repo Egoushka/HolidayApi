@@ -1,6 +1,4 @@
-﻿using HolidayApi.Data.Enum;
-
-namespace HolidayApi.Data.DTO.Holiday;
+﻿namespace HolidayApi.Data.DTO.Holiday;
 
 public class GetHolidayByYearAndCountryDto
 {
