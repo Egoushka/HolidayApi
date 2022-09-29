@@ -1,4 +1,5 @@
 using HolidayApi.Interfaces;
+using HolidayApi.Profiles;
 using HolidayApi.Services;
 using Microsoft.Net.Http.Headers;
 
@@ -11,7 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
-
+builder.Services.AddAutoMapper(typeof(HolidayProfile));
 builder.Services.AddHttpClient("getSupportedCountries", httpClient =>
 {
     httpClient.BaseAddress = new Uri("https://kayaposoft.com/enrico/json/v2.0/");
