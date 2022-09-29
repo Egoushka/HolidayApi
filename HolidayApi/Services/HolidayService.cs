@@ -6,6 +6,9 @@ using HolidayApi.Data.Requests;
 using HolidayApi.Interfaces;
 using Newtonsoft.Json.Linq;
 using System.Linq;
+using HolidayApi.Data.DTO.Day;
+using HolidayApi.Data.Response;
+
 namespace HolidayApi.Services;
 
 public class HolidayService : IHolidayService
@@ -49,5 +52,43 @@ public class HolidayService : IHolidayService
         List<Holiday> countries = JArray.Parse(json).Select(x => x.ToObject<Holiday>()).ToList()!;
         return countries.Select(item => _mapper.Map<GetHolidayByYearAndCountryDto>(item))
             .GroupBy(item => item.Date.Month);
+    }
+
+    public async Task<GetSpecificDayStatusDto> GetSpecificDayStatus(GetSpecificDayStatusRequest request)
+    {
+        var isDayPublicHoliday = await IsDayPublicHoliday(request);
+        var isDayWorkDay = await IsDayWorkDay(request);
+        var result = new GetSpecificDayStatusDto
+        {
+            Status = isDayPublicHoliday ? "public holiday" :  isDayWorkDay? "work day" : "free day"
+        };
+
+        return result;
+    }
+    public async Task<bool> IsDayPublicHoliday(GetSpecificDayStatusRequest request)
+    {
+        var httpClient = _httpClientFactory.CreateClient("getSupportedCountries");
+        var httpResponseMessage = await httpClient.GetAsync(
+            $"?action=isPublicHoliday&date={request.Date}&country={request.CountryCode}");
+        if (!httpResponseMessage.IsSuccessStatusCode) return false;
+
+        var json = await httpResponseMessage.Content.ReadAsStringAsync();
+
+        var isPublicHolidayResponse = JObject.Parse(json).ToObject<IsPublicHolidayResponse>();
+
+        return isPublicHolidayResponse.IsPublicHoliday;
+    }
+    public async Task<bool> IsDayWorkDay(GetSpecificDayStatusRequest request)
+    {
+        var httpClient = _httpClientFactory.CreateClient("getSupportedCountries");
+        var httpResponseMessage = await httpClient.GetAsync(
+            $"?action=isPublicHoliday&date={request.Date}&country={request.CountryCode}");
+        if (!httpResponseMessage.IsSuccessStatusCode) return false;
+
+        var json = await httpResponseMessage.Content.ReadAsStringAsync();
+
+        var isWorkDayResponse = JObject.Parse(json).ToObject<IsWorkDayResponse>();
+
+        return isWorkDayResponse.IsWorkDay;
     }
 }

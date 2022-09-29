@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 
 namespace HolidayApi.Controllers;
-
+[Route("api/[controller]")]
 public class HolidaysController : Controller
 {
     private readonly IHolidayService _holidayService;
@@ -15,7 +15,7 @@ public class HolidaysController : Controller
     {
         _holidayService = holidayService;
     }
-    [HttpGet("holidays")]
+    [HttpGet("countries")]
     public async Task<IActionResult> GetCountries()
     {
         var result = await _holidayService.GetCountries();
@@ -26,8 +26,8 @@ public class HolidaysController : Controller
         }
         return Ok(result);
     }
-    [HttpGet("holidays/{countryCode}/{year}")]
-    public async Task<IActionResult> GetHolidaysByYearAndCountry(string countryCode, int year){
+    [HttpGet("holidays")]
+    public async Task<IActionResult> GetHolidaysByYearAndCountry([FromQuery]string countryCode, [FromQuery]int year){
         var request = new GetHolidaysByYearAndCountryRequest
         {
             CountryCode = countryCode,
@@ -42,12 +42,15 @@ public class HolidaysController : Controller
         }
         return Ok(result);
     }
-    [HttpGet]
-    public IActionResult GetSpecificDayStatus(){
-        return Ok("Hello World");
+    [HttpGet("getSpecificDay")]
+    public async Task<IActionResult> GetSpecificDayStatus([FromQuery]string countryCode, [FromQuery]string date){
+        var request = new GetSpecificDayStatusRequest
+        {
+            CountryCode = countryCode,
+            Date = date
+        };
+        var result = await _holidayService.GetSpecificDayStatus(request);
+        return Ok(result);
     }
-    [HttpGet]
-    public IActionResult GetMaximumNumberOfFreeDays(){
-        return Ok("Hello World");
-    }
+  
 }
