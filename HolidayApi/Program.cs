@@ -1,3 +1,5 @@
+using HolidayApi.Interfaces;
+using HolidayApi.Services;
 using Microsoft.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +23,8 @@ builder.Services.AddHttpClient("getSupportedCountries", httpClient =>
     httpClient.DefaultRequestHeaders.Add(
         HeaderNames.UserAgent, "HttpRequestsSample");
 });
+
+builder.Services.AddSingleton<IHolidayService, HolidayService>();
 
 var app = builder.Build();
 
