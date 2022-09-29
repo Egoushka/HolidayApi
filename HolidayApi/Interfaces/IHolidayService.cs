@@ -11,5 +11,7 @@ public interface IHolidayService
     public Task<IEnumerable<IGrouping<int, GetHolidayByYearAndCountryDto>>> GetHolidaysByYearAndCountry(
         GetHolidaysByYearAndCountryRequest request);
     public Task<GetSpecificDayStatusDto> GetSpecificDayStatus(GetSpecificDayStatusRequest request);
+    
+    public Task<GetMaximumNumberOfFreeDaysDto> GetMaximumNumberOfFreeDays(GetMaximumNumberOfFreeDaysRequest request);
 
 }

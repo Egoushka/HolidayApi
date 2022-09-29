@@ -16,4 +16,9 @@ public class Date {
     public int Month { get; set; }
     public int Year { get; set; }
     public int DayOfWeek { get; set; }
+
+    public int ToDaysWithoutYear()
+    {
+        return (Month - 1) * 31 + Day;
+    }
 }

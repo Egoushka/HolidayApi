@@ -90,4 +90,58 @@ public class HolidayService : IHolidayService
 
         return isWorkDayResponse.IsWorkDay;
     }
+    
+    public async Task<GetMaximumNumberOfFreeDaysDto> GetMaximumNumberOfFreeDays(GetMaximumNumberOfFreeDaysRequest request)
+    {
+        var httpClient = _httpClientFactory.CreateClient("getSupportedCountries");
+        var httpResponseMessage = await httpClient.GetAsync(
+            $"?action=getHolidaysForYear&year={request.Year}&country={request.CountryCode}");
+        
+        if (!httpResponseMessage.IsSuccessStatusCode) return null;
+
+        var json = await httpResponseMessage.Content.ReadAsStringAsync();
+
+        List<Holiday> holidays = JArray.Parse(json)
+            .Select(x => x.ToObject<Holiday>())
+            .OrderBy(item => item.Date.Month)
+            .ThenBy(item => item.Date.Day).ToList();
+        var result = 0;
+        var indexToRemember = 0;
+        //TODO remove magic numbers and create separate class for this purpose
+        for (int index = 1, tmpResult = 0, tmpIndexToRemember = 0; index < holidays.Count; index++)
+        {
+            
+            var firstDaysCount = holidays[index].Date.ToDaysWithoutYear();
+            var secondDaysCount = holidays[tmpIndexToRemember + tmpResult].Date.ToDaysWithoutYear();
+            
+            var datesDifference = firstDaysCount - secondDaysCount;
+            
+            if(holidays[tmpIndexToRemember + tmpResult].Date.DayOfWeek >= 5 && (datesDifference > 1 && datesDifference <= 3))
+            {
+                var freeDays = 7 - holidays[tmpIndexToRemember + tmpResult].Date.DayOfWeek;
+                
+                tmpResult += freeDays;
+                datesDifference -= freeDays;
+            }
+            if(datesDifference == 1)
+            {
+                tmpResult++;
+            }
+            else
+            {
+                if (tmpResult > result)
+                {
+                    result = tmpResult + 1; // +1 because we need to count first day
+                    indexToRemember = tmpIndexToRemember;
+                }
+                tmpResult = 0;
+                tmpIndexToRemember = index;
+            }
+        }
+
+        return new GetMaximumNumberOfFreeDaysDto()
+        {
+            Number = result,
+        };
+    }
 }
