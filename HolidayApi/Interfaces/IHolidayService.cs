@@ -12,6 +12,6 @@ public interface IHolidayService
         GetHolidaysByYearAndCountryRequest request);
     public Task<GetSpecificDayStatusDto> GetSpecificDayStatus(GetSpecificDayStatusRequest request);
     
-    public Task<GetMaximumNumberOfFreeDaysDto> GetMaximumNumberOfFreeDays(GetMaximumNumberOfFreeDaysRequest request);
+    public Task<GetMaximumNumberOfFreeDaysDto?> GetMaximumNumberOfFreeDays(GetMaximumNumberOfFreeDaysRequest request);
 
 }
