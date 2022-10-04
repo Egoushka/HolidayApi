@@ -2,5 +2,5 @@
 
 public class GetMaximumNumberOfFreeDaysDto
 {
-    public int Number { get; set; }
+    public int FreeDaysCount { get; set; }
 }

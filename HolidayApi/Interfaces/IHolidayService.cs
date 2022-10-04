@@ -8,10 +8,10 @@ namespace HolidayApi.Interfaces;
 public interface IHolidayService
 {
     public Task<IEnumerable<GetCountryDto>> GetCountries();
-    public Task<IEnumerable<IGrouping<int, GetHolidayByYearAndCountryDto>>> GetHolidaysByYearAndCountry(
+    public Task<IEnumerable<GetHolidayByYearAndCountryDto>> GetHolidaysByYearAndCountry(
         GetHolidaysByYearAndCountryRequest request);
     public Task<GetSpecificDayStatusDto> GetSpecificDayStatus(GetSpecificDayStatusRequest request);
     
-    public Task<GetMaximumNumberOfFreeDaysDto> GetMaximumNumberOfFreeDays(GetMaximumNumberOfFreeDaysRequest request);
+    public Task<GetMaximumNumberOfFreeDaysDto?> GetMaximumNumberOfFreeDays(GetMaximumNumberOfFreeDaysRequest request);
 
 }

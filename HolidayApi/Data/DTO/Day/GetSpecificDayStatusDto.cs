@@ -2,5 +2,5 @@
 
 public class GetSpecificDayStatusDto
 {
-    public string Status { get; set; }
+    public string? Status { get; set; }
 }

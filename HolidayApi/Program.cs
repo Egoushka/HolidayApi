@@ -1,12 +1,19 @@
 using System.Reflection;
+using Community.Microsoft.Extensions.Caching.PostgreSql;
+using HolidayApi.Data;
 using HolidayApi.Interfaces;
 using HolidayApi.Profiles;
 using HolidayApi.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 // Add services to the container.
 
@@ -15,6 +22,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
+builder.Services.AddResponseCaching();
+builder.Services.AddResponseCompression();
 builder.Services.AddAutoMapper(typeof(HolidayProfile));
 builder.Services.AddHttpClient("getSupportedCountries", httpClient =>
 {
@@ -27,8 +36,18 @@ builder.Services.AddHttpClient("getSupportedCountries", httpClient =>
     httpClient.DefaultRequestHeaders.Add(
         HeaderNames.UserAgent, "HttpRequestsSample");
 });
-
-builder.Services.AddSingleton<IHolidayService, HolidayService>();
+builder.Services.AddDistributedPostgreSqlCache(option =>
+{
+    option.ConnectionString = builder.Configuration.GetConnectionString("DbConnection");
+    option.TableName = "cash";
+    option.ExpiredItemsDeletionInterval = TimeSpan.FromHours(1);
+    option.SchemaName = "public";
+});
+builder.Services.AddTransient<IHolidayService, HolidayService>();
+builder.Services.AddMvc();
+builder.Services
+    .AddDbContext<ApplicationContext>(optionsBuilder => 
+        optionsBuilder.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection")));
 
 var app = builder.Build();
 
@@ -38,6 +57,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+app.UseResponseCaching();
+
 
 app.UseAuthorization();
 
