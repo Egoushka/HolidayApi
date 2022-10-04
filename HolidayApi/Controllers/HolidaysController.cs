@@ -16,18 +16,19 @@ public class HolidaysController : Controller
 {
     private readonly IHolidayService _holidayService;
     private readonly IDistributedCache _cache;
-
-    public HolidaysController(IHolidayService holidayService, IDistributedCache cache)
+    private readonly IDistributedCacheExtensions _cacheExtensions;
+    public HolidaysController(IHolidayService holidayService, IDistributedCache cache, IDistributedCacheExtensions cacheExtensions)
     {
         _holidayService = holidayService;
         _cache = cache;
+        _cacheExtensions = cacheExtensions;
     }
 
     [HttpGet("countries")]
     public async Task<IActionResult> GetCountries()
     {
         var cacheKey = "getAllCountries";
-        var cacheData = _cache.TryGetValue<IEnumerable<GetCountryDto>>(cacheKey, out var result);
+        var cacheData = _cacheExtensions.TryGetValue<IEnumerable<GetCountryDto>>(_cache, cacheKey, out var result);
         if (cacheData)
         {
             return Ok(result);
@@ -35,7 +36,7 @@ public class HolidaysController : Controller
 
         result = await _holidayService.GetCountries();
         
-        await _cache.SetAsync(cacheKey, result);
+        await _cacheExtensions.SetAsync(_cache, cacheKey, result);
 
         return Ok(result);
     }
@@ -50,7 +51,7 @@ public class HolidaysController : Controller
             Year = year
         };
         var cacheKey = request.GetHashCode().ToString();
-        var cacheData = _cache.TryGetValue<IEnumerable<GetHolidayByYearAndCountryDto>>(cacheKey, out var result);
+        var cacheData = _cacheExtensions.TryGetValue<IEnumerable<GetHolidayByYearAndCountryDto>>(_cache, cacheKey, out var result);
         if (cacheData)
         {
             return Ok(result);
@@ -58,7 +59,7 @@ public class HolidaysController : Controller
 
         result = await _holidayService.GetHolidaysByYearAndCountry(request);
 
-        await _cache.SetAsync(cacheKey, result);
+        await _cacheExtensions.SetAsync(_cache, cacheKey, result);
         
         return Ok(result);
 
@@ -73,7 +74,7 @@ public class HolidaysController : Controller
             Date = date
         };
         var cacheKey = request.GetHashCode().ToString();
-        var cacheData = _cache.TryGetValue<GetSpecificDayStatusDto>(cacheKey, out var result);
+        var cacheData = _cacheExtensions.TryGetValue<GetSpecificDayStatusDto>(_cache, cacheKey, out var result);
         if (cacheData)
         {
             return Ok(result);
@@ -81,7 +82,7 @@ public class HolidaysController : Controller
 
         result = await _holidayService.GetSpecificDayStatus(request);
 
-        await _cache.SetAsync(cacheKey, result);
+        await _cacheExtensions.SetAsync(_cache, cacheKey, result);
         
         return Ok(result);
     }
@@ -95,7 +96,7 @@ public class HolidaysController : Controller
             Year = year
         };
         var cacheKey = request.GetHashCode().ToString();
-        var cacheData = _cache.TryGetValue<GetMaximumNumberOfFreeDaysDto>(cacheKey, out var result);
+        var cacheData = _cacheExtensions.TryGetValue<GetMaximumNumberOfFreeDaysDto>(_cache, cacheKey, out var result);
         if (cacheData)
         {
             return Ok(result);
@@ -103,7 +104,7 @@ public class HolidaysController : Controller
 
         result = await _holidayService.GetMaximumNumberOfFreeDays(request);
         
-        await _cache.SetAsync(cacheKey, result);
+        await _cacheExtensions.SetAsync(_cache, cacheKey, result);
         
         return Ok(result);
     }

@@ -113,7 +113,7 @@ public class HolidayService : IHolidayService
 
         var result = HolidayHelper.GetMaximumNumberOfFreeDays(holidays);
 
-        return new GetMaximumNumberOfFreeDaysDto()
+        return new GetMaximumNumberOfFreeDaysDto
         {
             FreeDaysCount = result
         };

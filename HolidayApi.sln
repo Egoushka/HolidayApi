@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HolidayApi", "HolidayApi\HolidayApi.csproj", "{A89A2A97-26EB-4E44-8457-46FC702567AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HolidayApiTests", "HolidayApiTests\HolidayApiTests.csproj", "{18D2D006-77EB-4B1E-A7AF-7618862E6F0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{A89A2A97-26EB-4E44-8457-46FC702567AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A89A2A97-26EB-4E44-8457-46FC702567AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A89A2A97-26EB-4E44-8457-46FC702567AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18D2D006-77EB-4B1E-A7AF-7618862E6F0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18D2D006-77EB-4B1E-A7AF-7618862E6F0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18D2D006-77EB-4B1E-A7AF-7618862E6F0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18D2D006-77EB-4B1E-A7AF-7618862E6F0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
