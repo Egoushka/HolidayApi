@@ -4,6 +4,7 @@ namespace HolidayApi.Data;
 
 [Serializable]
 public class Date {
+    public Date(){}
     public Date(JObject date)
     {
         DayOfWeek = Convert.ToInt32((string) date["dayOfWeek"]);
@@ -11,7 +12,6 @@ public class Date {
         Month = Convert.ToInt32((string) date["month"]);
         Day = Convert.ToInt32((string) date["day"]);
     }
-
     public int Day { get; set; }
     public int Month { get; set; }
     public int Year { get; set; }

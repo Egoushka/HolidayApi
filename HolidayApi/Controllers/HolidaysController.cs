@@ -1,5 +1,8 @@
 ﻿using System.Text.Json;
 using HolidayApi.Data;
+using HolidayApi.Data.DTO.Country;
+using HolidayApi.Data.DTO.Day;
+using HolidayApi.Data.DTO.Holiday;
 using HolidayApi.Data.Requests;
 using HolidayApi.Extensions;
 using HolidayApi.Interfaces;
@@ -24,19 +27,16 @@ public class HolidaysController : Controller
     public async Task<IActionResult> GetCountries()
     {
         var cacheKey = "getAllCountries";
-        var cacheData = _cache.TryGetValue<string>(cacheKey, out var result);
+        var cacheData = _cache.TryGetValue<IEnumerable<GetCountryDto>>(cacheKey, out var result);
         if (cacheData)
         {
             return Ok(result);
         }
 
-        result = JsonSerializer.Serialize(await _holidayService.GetCountries(),
-            new JsonSerializerOptions
-            {
-                WriteIndented = true
-            });
-
+        result = await _holidayService.GetCountries();
+        
         await _cache.SetAsync(cacheKey, result);
+
         return Ok(result);
     }
 
@@ -50,17 +50,13 @@ public class HolidaysController : Controller
             Year = year
         };
         var cacheKey = request.GetHashCode().ToString();
-        var cacheData = _cache.TryGetValue<string>(cacheKey, out var result);
+        var cacheData = _cache.TryGetValue<IEnumerable<GetHolidayByYearAndCountryDto>>(cacheKey, out var result);
         if (cacheData)
         {
             return Ok(result);
         }
 
-        result = JsonSerializer.Serialize(await _holidayService.GetHolidaysByYearAndCountry(request),
-            new JsonSerializerOptions
-            {
-                WriteIndented = true
-            });
+        result = await _holidayService.GetHolidaysByYearAndCountry(request);
 
         await _cache.SetAsync(cacheKey, result);
         
@@ -77,16 +73,13 @@ public class HolidaysController : Controller
             Date = date
         };
         var cacheKey = request.GetHashCode().ToString();
-        var cacheData = _cache.TryGetValue<string>(cacheKey, out var result);
+        var cacheData = _cache.TryGetValue<GetSpecificDayStatusDto>(cacheKey, out var result);
         if (cacheData)
         {
             return Ok(result);
         }
 
-        result = JsonSerializer.Serialize(await _holidayService.GetSpecificDayStatus(request), new JsonSerializerOptions
-        {
-            WriteIndented = true
-        });
+        result = await _holidayService.GetSpecificDayStatus(request);
 
         await _cache.SetAsync(cacheKey, result);
         
@@ -102,17 +95,13 @@ public class HolidaysController : Controller
             Year = year
         };
         var cacheKey = request.GetHashCode().ToString();
-        var cacheData = _cache.TryGetValue<string>(cacheKey, out var result);
+        var cacheData = _cache.TryGetValue<GetMaximumNumberOfFreeDaysDto>(cacheKey, out var result);
         if (cacheData)
         {
             return Ok(result);
         }
 
-        result = JsonSerializer.Serialize(await _holidayService.GetMaximumNumberOfFreeDays(request),
-            new JsonSerializerOptions
-            {
-                WriteIndented = true
-            });
+        result = await _holidayService.GetMaximumNumberOfFreeDays(request);
         
         await _cache.SetAsync(cacheKey, result);
         

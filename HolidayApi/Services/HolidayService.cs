@@ -38,7 +38,7 @@ public class HolidayService : IHolidayService
         return countries.Select(item => _mapper.Map<GetCountryDto>(item));
     }
 
-    public async Task<IEnumerable<IGrouping<int, GetHolidayByYearAndCountryDto>>> GetHolidaysByYearAndCountry(
+    public async Task<IEnumerable<GetHolidayByYearAndCountryDto>> GetHolidaysByYearAndCountry(
         GetHolidaysByYearAndCountryRequest request)
     {
         var httpClient = _httpClientFactory.CreateClient("getSupportedCountries");
@@ -50,9 +50,11 @@ public class HolidayService : IHolidayService
         var json = await httpResponseMessage.Content.ReadAsStringAsync();
 
 
-        List<Holiday> countries = JArray.Parse(json).Select(x => x.ToObject<Holiday>()).ToList()!;
-        return countries.Select(item => _mapper.Map<GetHolidayByYearAndCountryDto>(item))
-            .GroupBy(item => item.Date.Month);
+        var countries = JArray.Parse(json).Select(x => x.ToObject<Holiday>());
+        return countries
+            .Select(item => _mapper.Map<GetHolidayByYearAndCountryDto>(item))
+            .OrderByDescending(item => item.Date.Month)
+            .AsEnumerable();
     }
 
     public async Task<GetSpecificDayStatusDto> GetSpecificDayStatus(GetSpecificDayStatusRequest request)
