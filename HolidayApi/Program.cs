@@ -1,12 +1,17 @@
 using System.Reflection;
+using HolidayApi.Data;
 using HolidayApi.Interfaces;
 using HolidayApi.Profiles;
 using HolidayApi.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 // Add services to the container.
 
@@ -28,7 +33,11 @@ builder.Services.AddHttpClient("getSupportedCountries", httpClient =>
         HeaderNames.UserAgent, "HttpRequestsSample");
 });
 
-builder.Services.AddSingleton<IHolidayService, HolidayService>();
+builder.Services.AddTransient<IHolidayService, HolidayService>();
+builder.Services.AddMvc();
+builder.Services
+    .AddDbContext<ApplicationContext>(optionsBuilder => 
+        optionsBuilder.UseNpgsql(builder.Configuration.GetConnectionString("DbConnection")));
 
 var app = builder.Build();
 

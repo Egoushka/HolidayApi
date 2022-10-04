@@ -14,11 +14,13 @@ public class HolidayService : IHolidayService
 {
     private readonly IHttpClientFactory  _httpClientFactory;
     private readonly IMapper  _mapper;
+    private readonly ApplicationContext _context  ;
     
-    public HolidayService(IHttpClientFactory httpClientFactory, IMapper mapper)
+    public HolidayService(IHttpClientFactory httpClientFactory, IMapper mapper, ApplicationContext context)
     {
         _httpClientFactory = httpClientFactory;
         _mapper = mapper;
+        _context = context;
     }
 
     public async Task<IEnumerable<GetCountryDto>?> GetCountries()
